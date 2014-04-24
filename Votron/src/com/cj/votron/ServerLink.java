@@ -18,7 +18,15 @@ public class ServerLink {
 	static ServerLink instance = new ServerLink();
 
 	public static ServerLink getInstance() { return instance; }
-
+	
+	private static final String DBPEDIAQ = "http://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=";
+  private static final String DPEDIA_JSONSPEC = "&format=json";
+  
+  String getDbpediaQuery(String query){
+  	return getPageText(DBPEDIAQ + query + DPEDIA_JSONSPEC);  	
+  }
+	
+	
 	String getPageText(String uri) {
 		System.out.println(uri);
 		HttpClient httpClient = new DefaultHttpClient();
@@ -26,15 +34,19 @@ public class ServerLink {
 		HttpGet httpGet = new HttpGet(uri);
 		String text = null;
 		try {
-      Log.d("getPageText","about to execute httpClient");
+      System.out.println("DBG getPageText" + "about to execute httpClient");
+      if (httpClient == null){
+      	System.out.println("WTF?  No httpClient?");
+      	return "WTF?  No httpClient found.  Shazbot!";
+      }
 			HttpResponse response = httpClient.execute(httpGet, localContext);
-			Log.d("getPageText","about to get entity");
+			System.out.println("DBG getPageText" + "about to get entity");
 			HttpEntity entity = response.getEntity();
-			Log.d("getPageText","about to get ascii content");
+			System.out.println("DBG getPageText" + "about to get ascii content");
 			text = getASCIIContentFromEntity(entity);
 
 		} catch (Exception e) {
-			System.out.println("DBG: Exception:"+e.getCause().toString());
+			System.out.println("DBG: Exception:"+e.getMessage());
 			return e.getLocalizedMessage();
 		}
 		System.out.println("DBG: It's alive!");

@@ -47,7 +47,10 @@ class Config {
 	}
 	
 	String debug2(String arg){
-		return "Debug 2 called:"+arg;
+		String dbpq = "select*%7Bdbpedia%3ALos_Angeles+rdfs%3Alabel+%3Flabel%7D";
+		String result = ServerLink.getInstance().getDbpediaQuery(dbpq);
+		System.out.println(result);
+		return result;
 	}
 	
 	String debug3(String arg){

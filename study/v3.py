@@ -4,6 +4,15 @@ import sys,httplib2,urllib
 import json
 import urllib.parse
 
+WikiQuery="http://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=select*%7Bdbpedia%3ALos_Angeles+rdfs%3Alabel+%3Flabel%7D&format=json"
+
+
+DBPQ = "http://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&"
+QWikiQuery="http://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query="
+FMTJ="&format=json"
+
+SELECTION="select*%7Bdbpedia%3ALos_Angeles+rdfs%3Alabel+%3Flabel%7D&format=json"
+
 
 ####################################################
 #
@@ -109,6 +118,24 @@ def getCandidates(election):
 elections = getElections()
 voters = getVoters()
 candidates = getCandidates('NaN Celebration')
+
+
+
+q = "select*%7Bdbpedia%3ALos_Angeles+rdfs%3Alabel+%3Flabel%7D"
+
+def dbQuery(query):
+  action="http://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query="
+  fmtspec ="&format=json"
+  url = action + query + fmtspec
+  resp, content = HTTP.request(url, 'GET', headers=HEADERS)
+  data = json.loads(content.decode('utf-8'))
+  return data
+
+#test = getWikiquery(SELECTION)
+test = dbQuery(q)
+print(test)
+
+  
   
   
 
