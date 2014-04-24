@@ -11,28 +11,33 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 
+import android.util.Log;
+
 public class ServerLink {
 
 	static ServerLink instance = new ServerLink();
 
-	public static ServerLink getInstance() {
-		return instance;
-	}
+	public static ServerLink getInstance() { return instance; }
 
 	String getPageText(String uri) {
+		System.out.println(uri);
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpContext localContext = new BasicHttpContext();
 		HttpGet httpGet = new HttpGet(uri);
 		String text = null;
 		try {
-
+      Log.d("getPageText","about to execute httpClient");
 			HttpResponse response = httpClient.execute(httpGet, localContext);
+			Log.d("getPageText","about to get entity");
 			HttpEntity entity = response.getEntity();
+			Log.d("getPageText","about to get ascii content");
 			text = getASCIIContentFromEntity(entity);
 
 		} catch (Exception e) {
+			System.out.println("DBG: Exception:"+e.getCause().toString());
 			return e.getLocalizedMessage();
 		}
+		System.out.println("DBG: It's alive!");
 		return text;
 	}
 

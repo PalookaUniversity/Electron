@@ -41,6 +41,8 @@ class Config {
 	Voters getVoters() { return voters;}
 	
 	String debug1(String arg){
+		String result = ServerLink.getInstance().getPageText("http://devops102.wl.cj.com:12345/elections");
+		System.out.println(result);
 		return "Debug 1 called:"+arg;
 	}
 	
