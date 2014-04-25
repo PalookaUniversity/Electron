@@ -26,7 +26,11 @@ public class ServerLink {
   	return getPageText(DBPEDIAQ + query + DPEDIA_JSONSPEC);  	
   }
 	
-	
+	/**
+	 * Broken!  cannot work without an independent thread executor!
+	 * @param uri
+	 * @return
+	 */
 	String getPageText(String uri) {
 		System.out.println(uri);
 		HttpClient httpClient = new DefaultHttpClient();
@@ -39,13 +43,14 @@ public class ServerLink {
       	System.out.println("WTF?  No httpClient?");
       	return "WTF?  No httpClient found.  Shazbot!";
       }
-			HttpResponse response = httpClient.execute(httpGet, localContext);
-			System.out.println("DBG getPageText" + "about to get entity");
-			HttpEntity entity = response.getEntity();
-			System.out.println("DBG getPageText" + "about to get ascii content");
-			text = getASCIIContentFromEntity(entity);
+		HttpResponse response = httpClient.execute(httpGet, localContext);
+		System.out.println("DBG getPageText" + "about to get entity");
+		HttpEntity entity = response.getEntity();
+		System.out.println("DBG getPageText" + "about to get ascii content");
+		text = getASCIIContentFromEntity(entity);
 
 		} catch (Exception e) {
+			System.out.println("Error!");
 			System.out.println("DBG: Exception:"+e.getMessage());
 			return e.getLocalizedMessage();
 		}
