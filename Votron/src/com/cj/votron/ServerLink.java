@@ -11,9 +11,26 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 
+import android.os.AsyncTask;
 import android.util.Log;
 
 public class ServerLink {
+	
+	String buffer;
+	
+    private class HttpAsyncTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+ 
+            return getPageText(urls[0]);
+        }
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(String result) {
+            //Toast.makeText(getBaseContext(), "Received!", Toast.LENGTH_LONG).show();
+            buffer = result;
+       }
+    }
 
 	static ServerLink instance = new ServerLink();
 
