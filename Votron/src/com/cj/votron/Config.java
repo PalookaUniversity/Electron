@@ -1,10 +1,19 @@
 package com.cj.votron;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import android.widget.ArrayAdapter;
 
 class Config {
+	
+	Map<String,String>parameters = new HashMap<String,String>();
+	public void setParam(String attr, String val){
+		parameters.put(attr,val);
+	}
+	public String getParam(String attr){  return parameters.get(attr); }
+	
 		
 	class Elections {
 
