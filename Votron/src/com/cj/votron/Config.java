@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.app.Activity;
 import android.widget.ArrayAdapter;
 
 class Config {
@@ -49,20 +50,25 @@ class Config {
 	private Voters voters = new Voters();
 	Voters getVoters() { return voters;}
 	
-	String debug1(String arg){
-		String result = ServerLink.getInstance().getPageText("http://devops102.wl.cj.com:12345/elections");
-		System.out.println(result);
-		return "Debug 1 called:"+arg;
-	}
-	
-	String debug2(String arg){
+	String debug1(String arg, Activity activity){
 		String dbpq = "select*%7Bdbpedia%3ALos_Angeles+rdfs%3Alabel+%3Flabel%7D";
-		String result = ServerLink.getInstance().getDbpediaQuery(dbpq);
+		ServerLink.getInstance().getDbpediaQuery(dbpq, activity);
+		String result = "dbg1 tried";
 		System.out.println(result);
 		return result;
 	}
 	
-	String debug3(String arg){
+	String debug2(String arg, Activity activity){
+//		String result = ServerLink.getInstance().getPageText(
+//				"http://devops102.wl.cj.com:12345/elections", activity);
+		String result = "debug2 unused";
+		System.out.println(result);
+		return result +arg;
+	}
+	
+
+	
+	String debug3(String arg, Activity activity){
 		return "Debug 3 called:"+arg;
 	}
 	

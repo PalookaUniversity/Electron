@@ -9,6 +9,8 @@ import java.util.Arrays;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -17,6 +19,8 @@ import android.widget.ListView;
  *
  */
 public class ElectionsActivity extends Activity {
+	
+	
 	
 	  private ListView electionListView ;  
 	  private ArrayAdapter<String> listAdapter ; 	  
@@ -35,5 +39,11 @@ public class ElectionsActivity extends Activity {
 	    electionListView = (ListView) findViewById( R.id.electionsListView );  	    
 	    listAdapter = new ArrayAdapter<String>(this, R.layout.simplerow, (elections.getElectionsList()));  
 	    electionListView.setAdapter( listAdapter );        
-	  }  		
+	  }
+	  
+	  void doFoo(View v){
+		  // Example for button action
+	  }
+
+	  
 }

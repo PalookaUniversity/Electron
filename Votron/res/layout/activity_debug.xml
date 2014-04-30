@@ -17,6 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="Debug1"
+        android:onClick="dbg1Pressed"
         android:title="dbg1" />
 
     <Button
@@ -25,6 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="Debug2"
+        android:onClick="dbg2Pressed"
         android:title="dbg2" />
 
     <Button
@@ -33,6 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="Debug3"
+        android:onClick="dbg3Pressed"
         android:title="dbg3" />
 
 </LinearLayout>
