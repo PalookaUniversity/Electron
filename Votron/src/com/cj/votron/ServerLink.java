@@ -79,6 +79,7 @@ public class ServerLink {
 			System.out.println("DBG: Follow up");
 			System.out.println(result);
 			Config.getInstance().setParam(label, result);
+			DebugActivity.displayBuffer = result;
 		}
 
 		/* (non-Javadoc)

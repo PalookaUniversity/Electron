@@ -12,6 +12,7 @@ import android.view.View.OnClickListener;
 public class DebugActivity extends Activity {
 
 
+	public static String displayBuffer = "Move along.  Nothing to see here.";
 	EditText editText;
 	Config config;
 
@@ -28,7 +29,6 @@ public class DebugActivity extends Activity {
 
 		editText = (EditText)findViewById(R.id.display);
 		config = Config.getInstance();
-
 	}
 
 
@@ -40,13 +40,20 @@ public class DebugActivity extends Activity {
 
 	public void dbg2Pressed(View view){
 		System.out.println("Pressed DBG2");
-		String result = config.debug2("bar", DebugActivity.this);
-		editText.setText(result);
+		editText.setText(displayBuffer);
 	}
 
 	public void dbg3Pressed(View view){
 		System.out.println("Pressed DBG3");
 		String result = config.debug3("baz", DebugActivity.this);
 		editText.setText(result);
+	}
+	
+	public void display(String msg){
+		System.out.println("DBG display");
+		System.out.println(msg);
+		editText.setText(msg);
+		System.out.println("DBG display over");
+		
 	}
 }

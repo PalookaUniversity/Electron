@@ -13,6 +13,7 @@ class Config {
 	public void setParam(String attr, String val){
 		parameters.put(attr,val);
 	}
+	
 	public String getParam(String attr){  return parameters.get(attr); }
 	
 		
