@@ -45,28 +45,12 @@ public class ServerLink {
 			HttpContext localContext = new BasicHttpContext();
 			HttpGet httpGet = new HttpGet(query);
 			try {
-				System.out.println("DBG getPageText" + "about to execute httpClient");
-				if (httpClient == null) {
-					crash("WTF?  No httpClient?",null);
-				}
 				HttpResponse response = httpClient.execute(httpGet, localContext);
-				if (response == null) {
-					crash("WTF?  No response?",null);
-				}
-				System.out.println("DBG getPageText" + "about to get entity");
 				HttpEntity entity = response.getEntity();
-				if (entity == null) {
-					crash("WTF?  No http entity?",null);
-				}
-				System.out.println("DBG getPageText" + "about to get ascii content");
 				result = getASCIIContentFromEntity(entity);
-
 			} catch (Exception e) {
-				System.out.println("Error!");
-				System.out.println("DBG: Exception:" + e.getMessage());
-				status =  e.getLocalizedMessage();
+				crash("Error:  Exec crashed", e);
 			}
-			System.out.println("DBG: exec complete!");
 			return;
 
 		}
@@ -122,19 +106,18 @@ public class ServerLink {
 	String buffer;
 	Activity currentActivity;
 	private final static String URL_TARGET = "";
-
 	static ServerLink instance = new ServerLink();
 
-	public static ServerLink getInstance() {
-		return instance;
-	}
+	public static ServerLink getInstance() { return instance; }
 
 	private static final String DBPEDIAQ = "http://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=";
 	private static final String DPEDIA_JSONSPEC = "&format=json";
 
 	void getDbpediaQuery(String query, Activity activity) {
 		Fetch fetch = new Fetch();
-		fetch.setQuery(DBPEDIAQ + query + DPEDIA_JSONSPEC).setLabel("dbpedia").setActivity(activity);
+		fetch.setQuery(DBPEDIAQ + query + DPEDIA_JSONSPEC)
+		.setLabel("dbpedia")
+		.setActivity(activity);
 		asyncAction(activity,fetch);
 		return;
 	}
@@ -145,18 +128,11 @@ public class ServerLink {
 		new AsyncTask<Context, Void, Void>() {
 			@Override
 			protected Void doInBackground(Context... backgroundListOfParameters) {
-				debug("async task started");
 				try {
-					System.out.println("DBG Async in BG");
 					fetch.exec();
 					fetch.followUp();
-					System.out.println("DBG Async BG complete");
-
 				} catch (Exception e) {
-					System.out.println("Async crashed");					
-					System.out.println(e.getMessage());
-					e.printStackTrace();
-					debug("error in doInBackground: " + e.getMessage());
+					crash("Error: Async crashed",e);
 				}
 				return null;
 			}
@@ -180,58 +156,9 @@ public class ServerLink {
 		return out.toString();
 	}
 
-	String getText(String uri) {
-		return "uri foo ";
-	}
-
-	void doHttpGet(final Activity activity, final String target) {
-		new AsyncTask<Context, Void, Void>() {
-			@Override
-			protected Void doInBackground(Context... backgroundListOfParameters) {
-				debug("async task started");
-				try {
-					String result = restCollect(target);
-					Config.getInstance().setParam(target, result);
-					// Do something with the result...
-					// Save result in config data
-					// Use currentActivity to display 
-				} catch (Exception e) {
-					debug("error in doInBackground: " + e.getMessage());
-				}
-				return null;
-			}
-		}.execute();
-	}
 
 	private void debug(String msg) {
 		// TODO: FOR DEBUGGING
 		// Log.d(getClass().getName(), msg);
-	}
-
-	private HttpClient client = new DefaultHttpClient();
-
-	void setHttpClient(HttpClient c) {
-		client = c;
-	}
-
-	private String restCollect(String targetUrl) {
-		Log.d(URL_TARGET, "going to " + targetUrl);
-		HttpGet httpGet = new HttpGet(targetUrl);
-		HttpResponse response = null;
-		Integer httpStatus = null;
-		String result = "NO DATA";
-		try {
-			response = client.execute(httpGet);
-			httpStatus = response.getStatusLine().getStatusCode();
-			result = EntityUtils.toString(response.getEntity());
-
-			Log.d(URL_TARGET, "got as a result: " + result);
-
-		} catch (IOException e) {
-			Log.d(URL_TARGET, "sendToCj: something bad: " + e.getMessage());
-			result = "Error: " + e.getMessage();
-		}
-		Log.d(URL_TARGET, "status is " + httpStatus);
-		return result;
 	}
 }
