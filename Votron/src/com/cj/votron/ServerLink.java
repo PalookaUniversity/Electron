@@ -1,7 +1,11 @@
 package com.cj.votron;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Map;
 
 import org.apache.http.HttpEntity;
@@ -35,25 +39,58 @@ public class ServerLink {
 		String query;
 		Activity activity;
 		String label;
+		
+		public Fetch(String query, Activity activity, String label){
+			this.query = query;
+			this.activity = activity;
+			this.label = label;
+		}
 
 		/* (non-Javadoc)
 		 * @see com.cj.votron.AsyncWebAction#exec()
 		 */
 		@Override
 		public void exec() {
-			HttpClient httpClient = new DefaultHttpClient();
-			HttpContext localContext = new BasicHttpContext();
-			HttpGet httpGet = new HttpGet(query);
+						
+//			HttpClient httpClient = new DefaultHttpClient();
+//			HttpContext localContext = new BasicHttpContext();
+//			HttpGet httpGet = new HttpGet(query);
 			try {
-				HttpResponse response = httpClient.execute(httpGet, localContext);
-				HttpEntity entity = response.getEntity();
-				result = getASCIIContentFromEntity(entity);
+				HttpURLConnection con = 
+						(HttpURLConnection) new URL(url).openConnection();
+				result = readStream(con.getInputStream());
+				
+//				HttpResponse response = httpClient.execute(httpGet, localContext);
+//				HttpEntity entity = response.getEntity();
+//				result = getASCIIContentFromEntity(entity);
 			} catch (Exception e) {
 				crash("Error:  Exec crashed", e);
 			}
 			return;
-
 		}
+		
+		private String readStream(InputStream in) {
+			  BufferedReader reader = null;
+			  StringBuilder sb = new StringBuilder();
+			  try {
+			    reader = new BufferedReader(new InputStreamReader(in));
+			    String line = "";
+			    while ((line = reader.readLine()) != null) {
+			    	sb.append(line);
+			    }
+			  } catch (IOException e) {
+			    e.printStackTrace();
+			  } finally {
+			    if (reader != null) {
+			      try {
+			        reader.close();
+			      } catch (IOException e) {
+			        e.printStackTrace();
+			        }
+			    }
+			  }
+			  return sb.toString();
+			} 
 
 		/* (non-Javadoc)
 		 * @see com.cj.votron.AsyncWebAction#followUp()
@@ -66,14 +103,7 @@ public class ServerLink {
 			DebugActivity.displayBuffer = result;
 		}
 
-		/* (non-Javadoc)
-		 * @see com.cj.votron.AsyncWebAction#setQuery()
-		 */
-		@Override
-		public AsyncWebAction setQuery(String query) {
-			this.query = query;
-			return this;
-		}
+
 
 		/* (non-Javadoc)
 		 * @see com.cj.votron.AsyncWebAction#getStatus()
@@ -86,21 +116,6 @@ public class ServerLink {
 		 */
 		@Override
 		public String getResult() { return result; }
-
-		@Override
-		public AsyncWebAction setActivity(Activity activity) {
-			this.activity = activity;
-			return this;
-		}
-
-		@Override
-		public AsyncWebAction setLabel(String label) {
-			this.label = label;
-			return this;
-		}
-
-		@Override
-		public String getLabel() { return label; }
 	}
 
 	String buffer;
@@ -114,15 +129,10 @@ public class ServerLink {
 	private static final String DPEDIA_JSONSPEC = "&format=json";
 
 	void getDbpediaQuery(String query, Activity activity) {
-		Fetch fetch = new Fetch();
-		fetch.setQuery(DBPEDIAQ + query + DPEDIA_JSONSPEC)
-		.setLabel("dbpedia")
-		.setActivity(activity);
+		Fetch fetch = new Fetch(query, activity, "dbpedia");
 		asyncAction(activity,fetch);
 		return;
 	}
-
-
 	
 	void asyncAction(final Activity activity, final Fetch fetch) {
 		new AsyncTask<Context, Void, Void>() {
@@ -139,8 +149,6 @@ public class ServerLink {
 		}.execute();
 	}
 	
-
-
 	String getASCIIContentFromEntity(HttpEntity entity)
 			throws IllegalStateException, IOException {
 
