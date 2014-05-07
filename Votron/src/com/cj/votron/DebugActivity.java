@@ -13,7 +13,7 @@ public class DebugActivity extends Activity {
 
 
 	public static String displayBuffer = "Move along.  Nothing to see here.";
-	EditText editText;
+	EditText debugText;
 	Config config;
 
 	@Override
@@ -27,32 +27,32 @@ public class DebugActivity extends Activity {
 
 	void initialize(){
 
-		editText = (EditText)findViewById(R.id.display);
+		debugText = (EditText)findViewById(R.id.debugDisplay);
 		config = Config.getInstance();
 	}
 
 
 	public void dbg1Pressed(View view){
 		System.out.println("Pressed DBG1");
-		String result = config.debug1("foo", DebugActivity.this);
-		editText.setText(result);
+		String dbpq = "select*%7Bdbpedia%3ALos_Angeles+rdfs%3Alabel+%3Flabel%7D";
+		ServerLink.getInstance().getDbpediaQuery(dbpq, this);
 	}
 
 	public void dbg2Pressed(View view){
 		System.out.println("Pressed DBG2");
-		editText.setText(displayBuffer);
+		debugText.setText(displayBuffer);
 	}
 
 	public void dbg3Pressed(View view){
 		System.out.println("Pressed DBG3");
 		String result = config.debug3("baz", DebugActivity.this);
-		editText.setText(result);
+		debugText.setText(result);
 	}
 	
 	public void display(String msg){
 		System.out.println("DBG display");
 		System.out.println(msg);
-		editText.setText(msg);
+		debugText.setText(msg);
 		System.out.println("DBG display over");
 		
 	}

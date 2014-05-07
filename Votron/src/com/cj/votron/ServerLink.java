@@ -33,7 +33,7 @@ public class ServerLink {
 	
 	public class Fetch implements AsyncWebAction {
 		
-		String url;
+
 		String result;
 		String status = "OK";
 		String query;
@@ -55,9 +55,10 @@ public class ServerLink {
 //			HttpClient httpClient = new DefaultHttpClient();
 //			HttpContext localContext = new BasicHttpContext();
 //			HttpGet httpGet = new HttpGet(query);
+			System.out.println("DBG ServerLink URL=<"+query+">");
 			try {
 				HttpURLConnection con = 
-						(HttpURLConnection) new URL(url).openConnection();
+						(HttpURLConnection) new URL(query).openConnection();
 				result = readStream(con.getInputStream());
 				
 //				HttpResponse response = httpClient.execute(httpGet, localContext);
@@ -99,6 +100,14 @@ public class ServerLink {
 		public void followUp() {
 			System.out.println("DBG: Follow up");
 			System.out.println(result);
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                	DebugActivity da = (DebugActivity)activity;
+                	da.display(result);
+                    //mTextViewStrength.append(" " + getString(R.string.disconnected));
+                }
+            });
 			Config.getInstance().setParam(label, result);
 			DebugActivity.displayBuffer = result;
 		}
@@ -129,7 +138,7 @@ public class ServerLink {
 	private static final String DPEDIA_JSONSPEC = "&format=json";
 
 	void getDbpediaQuery(String query, Activity activity) {
-		Fetch fetch = new Fetch(query, activity, "dbpedia");
+		Fetch fetch = new Fetch(DBPEDIAQ + query + DPEDIA_JSONSPEC, activity, "dbpedia");
 		asyncAction(activity,fetch);
 		return;
 	}
