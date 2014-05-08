@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.http.HttpEntity;
@@ -16,6 +17,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
@@ -52,18 +55,13 @@ public class ServerLink {
 		@Override
 		public void exec() {
 						
-//			HttpClient httpClient = new DefaultHttpClient();
-//			HttpContext localContext = new BasicHttpContext();
-//			HttpGet httpGet = new HttpGet(query);
-			System.out.println("DBG ServerLink URL=<"+query+">");
 			try {
 				HttpURLConnection con = 
 						(HttpURLConnection) new URL(query).openConnection();
-				result = readStream(con.getInputStream());
+				String rawJsonStr = readStream(con.getInputStream());
+				result = jsonerize(rawJsonStr);
 				
-//				HttpResponse response = httpClient.execute(httpGet, localContext);
-//				HttpEntity entity = response.getEntity();
-//				result = getASCIIContentFromEntity(entity);
+
 			} catch (Exception e) {
 				crash("Error:  Exec crashed", e);
 			}
@@ -178,4 +176,92 @@ public class ServerLink {
 		// TODO: FOR DEBUGGING
 		// Log.d(getClass().getName(), msg);
 	}
+	
+	
+	/***********************************************
+	 * 
+	 * JSON processing
+	 * 
+	 ************************************************/
+	
+	String jsonerize(String rawJsonStr){
+		
+		String cleanJson = "WTF?";
+		try {
+			JSONObject jsonObj = new JSONObject(rawJsonStr);
+			Iterator ks = jsonObj.keys();
+			Integer i = 0;
+			while (ks.hasNext()){
+				Object o = ks.next();
+				String str = o.toString();
+				String cls = o.getClass().toString();
+				System.out.println(">" + i + ":."+cls+"="+str);
+				System.out.println();
+			}
+			System.out.println("DBG: Maybe we got some?");
+			cleanJson = jsonObj.toString();
+			System.out.println(cleanJson);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return cleanJson;
+	}
+	
+	
+
+//	        protected transmute(String jsonStr) {
+//
+//	 
+//	            Log.d("Response: ", "> " + jsonStr);
+//	 
+//	            if (jsonStr != null) {
+//	                try {
+//	                    JSONObject jsonObj = new JSONObject(jsonStr);
+//	                     
+//	                    // Getting JSON Array node
+//	                    contacts = jsonObj.getJSONArray(TAG_CONTACTS);
+//	 
+//	                    // looping through All Contacts
+//	                    for (int i = 0; i < contacts.length(); i++) {
+//	                        JSONObject c = contacts.getJSONObject(i);
+//	                         
+//	                        String id = c.getString(TAG_ID);
+//	                        String name = c.getString(TAG_NAME);
+//	                        String email = c.getString(TAG_EMAIL);
+//	                        String address = c.getString(TAG_ADDRESS);
+//	                        String gender = c.getString(TAG_GENDER);
+//	 
+//	                        // Phone node is JSON Object
+//	                        JSONObject phone = c.getJSONObject(TAG_PHONE);
+//	                        String mobile = phone.getString(TAG_PHONE_MOBILE);
+//	                        String home = phone.getString(TAG_PHONE_HOME);
+//	                        String office = phone.getString(TAG_PHONE_OFFICE);
+//	 
+//	                        // tmp hashmap for single contact
+//	                        HashMap<String, String> contact = new HashMap<String, String>();
+//	 
+//	                        // adding each child node to HashMap key => value
+//	                        contact.put(TAG_ID, id);
+//	                        contact.put(TAG_NAME, name);
+//	                        contact.put(TAG_EMAIL, email);
+//	                        contact.put(TAG_PHONE_MOBILE, mobile);
+//	 
+//	                        // adding contact to contact list
+//	                        contactList.add(contact);
+//	                    }
+//	                } catch (JSONException e) {
+//	                    e.printStackTrace();
+//	                }
+//	            } else {
+//	                Log.e("ServiceHandler", "Couldn't get any data from the url");
+//	            }
+//	 
+//	            return null;
+//	        }
+	
+	
+	
 }
