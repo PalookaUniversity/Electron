@@ -13,6 +13,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
 
+
+
+/**********************************************************
+ * 
+ * @author gvamos
+ * Todo:
+ *   - How can I tell what sort of a JSON object am I holding (List, Hash,...?)
+ *   - Do I need a unique parse process for each data type? (Voter, Election, Candidate...?)
+ *
+ **********************************************************/
 public class MainActivity extends ActionBarActivity {
 
     @Override

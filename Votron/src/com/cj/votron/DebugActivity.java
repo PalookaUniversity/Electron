@@ -40,6 +40,7 @@ public class DebugActivity extends Activity {
 
 	public void dbg2Pressed(View view){
 		System.out.println("Pressed DBG2");
+		ServerLink.getInstance().getElectionQuery(Config.VOTERS, this);
 		debugText.setText(displayBuffer);
 	}
 

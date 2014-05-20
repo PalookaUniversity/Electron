@@ -17,6 +17,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -59,7 +60,8 @@ public class ServerLink {
 				HttpURLConnection con = 
 						(HttpURLConnection) new URL(query).openConnection();
 				String rawJsonStr = readStream(con.getInputStream());
-				result = jsonerize(rawJsonStr);
+				//result = jsoneriseObject(rawJsonStr);
+				result = jsoneriseList(rawJsonStr);
 				
 
 			} catch (Exception e) {
@@ -124,13 +126,34 @@ public class ServerLink {
 		@Override
 		public String getResult() { return result; }
 	}
-
+	
 	String buffer;
 	Activity currentActivity;
 	private final static String URL_TARGET = "";
 	static ServerLink instance = new ServerLink();
 
 	public static ServerLink getInstance() { return instance; }
+	
+	/**************************************************
+	 * 
+	 * Election tests
+	 * 
+	 **************************************************/
+	
+	void getElectionQuery(String query, Activity activity) {
+		Fetch fetch = new Fetch(Config.SERVER + "/" + query, activity, "elections");
+		asyncAction(activity,fetch);
+		return;
+	}
+	
+	
+	/**************************************************
+	 * 
+	 * Dbpedia tests
+	 * 
+	 **************************************************/
+
+
 
 	private static final String DBPEDIAQ = "http://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=";
 	private static final String DPEDIA_JSONSPEC = "&format=json";
@@ -184,7 +207,7 @@ public class ServerLink {
 	 * 
 	 ************************************************/
 	
-	String jsonerize(String rawJsonStr){
+	String jsoneriseObject(String rawJsonStr){
 		
 		String cleanJson = "WTF?";
 		try {
@@ -204,63 +227,27 @@ public class ServerLink {
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
-		
+		}		
 		return cleanJson;
 	}
 	
-	
+	String jsoneriseList(String rawJsonStr){
+		
+		String cleanJson = "WTF?";
+		try {
+			JSONArray arr = new JSONArray(rawJsonStr);
+			for (int i = 0; i < arr.length(); i++) {
+				String str = arr.getString(i);
+				System.out.println (str);
+				}
 
-//	        protected transmute(String jsonStr) {
-//
-//	 
-//	            Log.d("Response: ", "> " + jsonStr);
-//	 
-//	            if (jsonStr != null) {
-//	                try {
-//	                    JSONObject jsonObj = new JSONObject(jsonStr);
-//	                     
-//	                    // Getting JSON Array node
-//	                    contacts = jsonObj.getJSONArray(TAG_CONTACTS);
-//	 
-//	                    // looping through All Contacts
-//	                    for (int i = 0; i < contacts.length(); i++) {
-//	                        JSONObject c = contacts.getJSONObject(i);
-//	                         
-//	                        String id = c.getString(TAG_ID);
-//	                        String name = c.getString(TAG_NAME);
-//	                        String email = c.getString(TAG_EMAIL);
-//	                        String address = c.getString(TAG_ADDRESS);
-//	                        String gender = c.getString(TAG_GENDER);
-//	 
-//	                        // Phone node is JSON Object
-//	                        JSONObject phone = c.getJSONObject(TAG_PHONE);
-//	                        String mobile = phone.getString(TAG_PHONE_MOBILE);
-//	                        String home = phone.getString(TAG_PHONE_HOME);
-//	                        String office = phone.getString(TAG_PHONE_OFFICE);
-//	 
-//	                        // tmp hashmap for single contact
-//	                        HashMap<String, String> contact = new HashMap<String, String>();
-//	 
-//	                        // adding each child node to HashMap key => value
-//	                        contact.put(TAG_ID, id);
-//	                        contact.put(TAG_NAME, name);
-//	                        contact.put(TAG_EMAIL, email);
-//	                        contact.put(TAG_PHONE_MOBILE, mobile);
-//	 
-//	                        // adding contact to contact list
-//	                        contactList.add(contact);
-//	                    }
-//	                } catch (JSONException e) {
-//	                    e.printStackTrace();
-//	                }
-//	            } else {
-//	                Log.e("ServiceHandler", "Couldn't get any data from the url");
-//	            }
-//	 
-//	            return null;
-//	        }
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		return cleanJson;
+	}
+	
 	
 	
 	

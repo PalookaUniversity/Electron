@@ -9,6 +9,16 @@ import android.widget.ArrayAdapter;
 
 class Config {
 	
+	public static final String SERVER = "http://votecastomatic.com";
+	public static final String VOTERS = "voters";
+	public static final String ELECTIONS = "elections";
+	
+//	Elections: http://votecastomatic.com/elections
+//  Voters: http://votecastomatic.com/voters
+//	Election (Galactic Emperor): http://votecastomatic.com/elections/GalacticEmperor
+//	Candidates (Glelectic Emperor): http://votecastomatic.com/elections/GalacticEmperor/candidates
+
+	
 	Map<String,String>parameters = new HashMap<String,String>();
 	public void setParam(String attr, String val){
 		parameters.put(attr,val);
@@ -60,9 +70,8 @@ class Config {
 	}
 	
 	String debug2(String arg, Activity activity){
-//		String result = ServerLink.getInstance().getPageText(
-//				"http://devops102.wl.cj.com:12345/elections", activity);
-		String result = "debug2 unused";
+		ServerLink.getInstance().getDbpediaQuery(Config.VOTERS, activity);
+		String result = "debug2 tried";
 		System.out.println(result);
 		return result +arg;
 	}
