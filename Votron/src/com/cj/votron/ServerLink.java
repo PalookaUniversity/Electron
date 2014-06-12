@@ -61,7 +61,7 @@ public class ServerLink {
 						(HttpURLConnection) new URL(query).openConnection();
 				String rawJsonStr = readStream(con.getInputStream());
 				//result = jsoneriseObject(rawJsonStr);
-				result = jsoneriseList(rawJsonStr);
+				result = voterList(rawJsonStr);
 				
 
 			} catch (Exception e) {
@@ -231,12 +231,34 @@ public class ServerLink {
 		return cleanJson;
 	}
 	
-	String jsoneriseList(String rawJsonStr){
+	String voterList(String rawJsonStr){
+		
+		String cleanJson = "WTF?";
+		StringBuilder sb = new StringBuilder();
+		try {
+			JSONArray arr = new JSONArray(rawJsonStr);
+			for (int i = 0; i < arr.length(); i++) {
+				JSONObject obj = arr.getJSONObject(i);
+				String voterName = (String) obj.get("name");
+				//String str = arr.getString(i);
+				sb.append(voterName).append(",");
+				System.out.println (voterName);
+				}
+
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		return sb.toString();
+	}
+	
+	String electionList(String rawJsonStr){
 		
 		String cleanJson = "WTF?";
 		try {
 			JSONArray arr = new JSONArray(rawJsonStr);
 			for (int i = 0; i < arr.length(); i++) {
+				JSONObject obj = arr.getJSONObject(i);
 				String str = arr.getString(i);
 				System.out.println (str);
 				}

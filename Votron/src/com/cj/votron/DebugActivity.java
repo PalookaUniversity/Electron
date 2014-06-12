@@ -34,14 +34,14 @@ public class DebugActivity extends Activity {
 
 	public void dbg1Pressed(View view){
 		System.out.println("Pressed DBG1");
-		String dbpq = "select*%7Bdbpedia%3ALos_Angeles+rdfs%3Alabel+%3Flabel%7D";
-		ServerLink.getInstance().getDbpediaQuery(dbpq, this);
-	}
-
-	public void dbg2Pressed(View view){
-		System.out.println("Pressed DBG2");
 		ServerLink.getInstance().getElectionQuery(Config.VOTERS, this);
 		debugText.setText(displayBuffer);
+	}
+	
+	public void dbg2Pressed(View view){
+		System.out.println("Pressed DBG2");
+		String dbpq = "select*%7Bdbpedia%3ALos_Angeles+rdfs%3Alabel+%3Flabel%7D";
+		ServerLink.getInstance().getDbpediaQuery(dbpq, this);
 	}
 
 	public void dbg3Pressed(View view){
