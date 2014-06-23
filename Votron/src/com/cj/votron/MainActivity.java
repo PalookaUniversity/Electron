@@ -1,5 +1,9 @@
 package com.cj.votron;
 
+import java.util.ArrayList;
+import java.util.List;
+
+
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -11,6 +15,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.Toast;
 import android.os.Build;
 
 
@@ -24,6 +33,43 @@ import android.os.Build;
  *
  **********************************************************/
 public class MainActivity extends ActionBarActivity {
+	
+	private Spinner electionSpinner;
+	List<String> electionsList;
+	
+	private Spinner voterSpinner;
+	List<String> voterList;
+	
+	private Button btnConfig;
+		
+	public void addElectionsToSpinner(){
+		
+		electionSpinner = (Spinner) findViewById(R.id.electionSpinner);
+		
+		electionsList = new ArrayList<String>();
+		electionsList.add("Federal");
+		electionsList.add("State");
+		electionsList.add("Local");
+		ArrayAdapter<String> electionAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,electionsList);
+		electionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		electionSpinner.setAdapter(electionAdapter);
+				
+	}
+
+	//add items into spinner dynamically
+	public void addVotersToSpinner() {
+
+		voterSpinner = (Spinner) findViewById(R.id.voterSpinner);
+		
+		voterList = new ArrayList<String>();
+		voterList.add("Andy Adams");
+		voterList.add("Billy Barnacle");
+		voterList.add("Charlie Carbuncle");
+		ArrayAdapter<String> voterAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,voterList);
+		voterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		voterSpinner.setAdapter(voterAdapter);
+	}
+	
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +81,49 @@ public class MainActivity extends ActionBarActivity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
+        
+
+	    addElectionsToSpinner();
+	    addVotersToSpinner();
+
+	    
+		addListenerOnButton();
+		addListenerOnSpinnerItemSelection();
     }
+    
+	public void addListenerOnSpinnerItemSelection(){
+		
+		electionSpinner = (Spinner) findViewById(R.id.electionSpinner);				
+		electionSpinner.setOnItemSelectedListener(new CustomOnItemSelectedListener());
+		
+	}
+    
+	//get the selected dropdown list value
+	public void addListenerOnButton() {
+
+		electionSpinner = (Spinner) findViewById(R.id.electionSpinner);
+		voterSpinner = (Spinner) findViewById(R.id.voterSpinner);
+		
+		btnConfig = (Button) findViewById(R.id.btnConfig);
+		btnConfig.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				Toast.makeText(MainActivity.this,
+						"OnClickListener : " + 
+						"\nElectionSpinner 1 : " + String.valueOf(electionSpinner.getSelectedItem()) +
+						"\nVoterSpinner 2 : " + String.valueOf(voterSpinner.getSelectedItem()),
+						Toast.LENGTH_SHORT).show();
+			}
+
+		});
+
+	}
+    
+
+	
+
 
 
     @Override
